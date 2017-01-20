@@ -95,7 +95,6 @@ def depthFirstSearch(problem):
     start = (problem.getStartState() , None)
     stack.push(start)
     
-    
     while not stack.isEmpty():
         actualNode = stack.pop()
         if actualNode[0] in closeList:
@@ -113,24 +112,35 @@ def depthFirstSearch(problem):
                     stack.push(child)
         closeList.add(actualNode[0])   
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
+    queue = util.Queue()
+    closeList = set()
+    output = []
+
+    start = (problem.getStartState() , None)
+    queue.push(start)
+    
+    while not queue.isEmpty():
+        actualNode = queue.pop()
+        if actualNode[0] in closeList:
+            continue
+        else :
+            if problem.isGoalState(actualNode[0]):
+                while actualNode != start :
+                    output.append(actualNode[1])
+                    actualNode = actualNode[3]
+                return output[::-1]
+            else:
+                childs = problem.getSuccessors(actualNode[0])
+                for child in childs :
+                    child = child + (actualNode, )
+                    queue.push(child)
+        closeList.add(actualNode[0])
+
     util.raiseNotDefined()
 
 def uniformCostSearch(problem):
@@ -148,6 +158,8 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
+   
+     
     util.raiseNotDefined()
 
 
