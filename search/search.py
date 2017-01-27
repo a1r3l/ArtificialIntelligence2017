@@ -146,6 +146,44 @@ def breadthFirstSearch(problem):
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
+    #Creamos las bases de lo que  usaremos para guardar la informacion
+    queue = util.PriorityQueue()
+    closeList = set()
+    output = []
+    
+    #Insertamos el prrimer nodo 
+    start = (problem.getStartState(),None,0,0,None)
+    queue.push(start,0)
+
+    #Recorremos nodo a nodo para expandirlos
+    while not queue.isEmpty():
+        #Sacamos el primer nodo de la lista de nodos a expandir
+        actualNode = queue.pop()
+        #Si hemos pasado ya por este nodo saltamos la iteracion
+        if actualNode[0] in closeList:
+            continue
+        #Si no hemos pasado ya por el lo procesamos
+        else :
+            #Si es el GoalState Volvemos hacia atras para sacar la secuencia de pasos hasta aqui
+            if problem.isGoalState(actualNode[0]):
+                while actualNode != start :
+                    output.append(actualNode[1])
+                    actualNode = actualNode[4]
+                return output[::-1]
+            #Si no es goal State calculamos las fn(n) para decidir cual seguir expandiendo
+            else:
+                childs = problem.getSuccessors(actualNode[0])
+                for child in childs :
+                    #Calculamos el coste acumulado hasta este nodo
+                    cost = child[2] + actualNode[3]
+                    #calculamos el valor de la funcion f(n) con la heuristica = 0 y el coste acumulado
+                    fn = cost
+                    #Inserto informacion nueva en hijos
+                    child = child + (cost,actualNode, )
+                    #Inserto nodo en lista de prioridad
+                    queue.push(child,fn)
+        #inserto nodo visitado a la closeList
+        closeList.add(actualNode[0])
     util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
