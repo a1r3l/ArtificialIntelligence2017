@@ -118,10 +118,15 @@ def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
     queue = util.Queue()
-    closeList = set()
+    closeList = []
     output = []
 
     start = (problem.getStartState(),None)
+
+    #print start[0]
+    #print start[0][0]
+    #print start[0][1]
+
     queue.push(start)
     
     while not queue.isEmpty():
@@ -139,7 +144,7 @@ def breadthFirstSearch(problem):
                 for child in childs :
                     child = child + (actualNode, )
                     queue.push(child)
-        closeList.add(actualNode[0])
+        closeList.append(actualNode[0])
 
     util.raiseNotDefined()
 

@@ -288,7 +288,6 @@ class CornersProblem(search.SearchProblem):
         # Please add any code here which you would like to use
         # in initializing the problem
         "*** YOUR CODE HERE ***"
-        self.cornersVisited = [0,0,0,0];
 
     def getStartState(self):
         """
@@ -296,7 +295,7 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        return (self.startingPosition,self.cornersVisited)
+        return (self.startingPosition,set())
         util.raiseNotDefined()
 
     def isGoalState(self, state):
@@ -304,18 +303,10 @@ class CornersProblem(search.SearchProblem):
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
-        #Ponemos a true esta variable
-        goal = True
-        """
-        Recorremos cada posicion de cornersVisited y si resulta que todos son 1 
-        es decir visitado devolvemos un TRUE. En caso contrario cuando encontremos 
-        un 0 rompemos el bucle para no seguir calculando y devolvemos un FALSO, es
-        decir no hemos visitado todas las esquinas
-        """
-        for corner in self.cornersVisited
-            if !goal: break
-            goal = (goal && (corner == 1)) 
-        return goal
+        visCorners = state[1]             
+        if len(visCorners) == 4: 
+                return True
+        return False
 
         util.raiseNotDefined()
 
@@ -329,18 +320,8 @@ class CornersProblem(search.SearchProblem):
             state, 'action' is the action required to get there, and 'stepCost'
             is the incremental cost of expanding to that successor
         """
-        """
-         successors = []
-        for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
-            x,y = state
-            dx, dy = Actions.directionToVector(action)
-            nextx, nexty = int(x + dx), int(y + dy)
-            if not self.walls[nextx][nexty]:
-                nextState = (nextx, nexty)
-                cost = self.costFn(nextState)
-                successors.append( ( nextState, action, cost) )
-        """
-
+        pos = state[0]
+        visCorners = state[1]
 
         successors = []
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
@@ -351,7 +332,20 @@ class CornersProblem(search.SearchProblem):
             #   nextx, nexty = int(x + dx), int(y + dy)
             #   hitsWall = self.walls[nextx][nexty]
 
-            "*** YOUR CODE HERE ***"
+            "***YOUR CODE HERE ***"
+            x,y = pos
+            dx, dy = Actions.directionToVector(action)
+            nextx, nexty = int(x + dx), int(y + dy)
+            hitsWall = self.walls[nextx][nexty]
+            
+            if hitsWall: 
+                continue
+            else:
+                newNode = (nextx,nexty)
+                if newNode in self.corners and newNode not in visCorners:
+                    visCorners.add(newNode)
+                successors.append(((newNode,visCorners),action,1))
+
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
