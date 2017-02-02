@@ -341,10 +341,11 @@ class CornersProblem(search.SearchProblem):
             if hitsWall: 
                 continue
             else:
+                newVisCorners = set(visCorners)
                 newNode = (nextx,nexty)
-                if newNode in self.corners and newNode not in visCorners:
-                    visCorners.add(newNode)
-                successors.append(((newNode,visCorners),action,1))
+                if newNode in self.corners and newNode not in newVisCorners:
+                    newVisCorners.add(newNode)
+                successors.append(((newNode,newVisCorners),action,1))
 
 
         self._expanded += 1 # DO NOT CHANGE
