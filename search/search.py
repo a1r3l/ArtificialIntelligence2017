@@ -204,7 +204,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
 
     #Creamos las bases de lo que  usaremos para guardar la informacion
     queue = util.PriorityQueue()
-    closeList = set()
+    closeList = []
     output = []
     
     #Insertamos el prrimer nodo 
@@ -239,7 +239,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
                     #Inserto nodo en lista de prioridad
                     queue.push(child,fn)
         #inserto nodo visitado a la closeList
-        closeList.add(actualNode[0])
+        closeList.append(actualNode[0])
     util.raiseNotDefined()
 
 
