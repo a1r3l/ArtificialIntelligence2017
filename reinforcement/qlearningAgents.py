@@ -43,6 +43,7 @@ class QLearningAgent(ReinforcementAgent):
         ReinforcementAgent.__init__(self, **args)
 
         "*** YOUR CODE HERE ***"
+        self.Qvalues = util.Counter()
 
     def getQValue(self, state, action):
         """
@@ -51,6 +52,8 @@ class QLearningAgent(ReinforcementAgent):
           or the Q node value otherwise
         """
         "*** YOUR CODE HERE ***"
+        #_getItem_ de Counter ya devuelve 0 cuando no esta el state dentro
+        return self.Qvalues[state,action]
         util.raiseNotDefined()
 
 
@@ -62,6 +65,19 @@ class QLearningAgent(ReinforcementAgent):
           terminal state, you should return a value of 0.0.
         """
         "*** YOUR CODE HERE ***"
+        #recogemos las acciones
+        actions = self.getLegalActions(state)
+        #si no hay acciones devolvemos 0
+        if not actions:
+          return 0.0
+        #por cada accion computamos el valor y devolveremos el maximo
+        qvalue = -float("inf")
+        for action in actions:
+          currentValue = self.getQValue(state,action)
+          if currentValue > qvalue:
+            qvalue = currentValue
+        return qvalue  
+
         util.raiseNotDefined()
 
     def computeActionFromQValues(self, state):
@@ -71,6 +87,21 @@ class QLearningAgent(ReinforcementAgent):
           you should return None.
         """
         "*** YOUR CODE HERE ***"
+        #recogemos las acciones
+        actions = self.getLegalActions(state) 
+        #si no hay acciones devolvemos 0
+        if not actions:
+          return None 
+        #computamos el valor maximo y vamos actualizando la accion
+        qvalue = -float("inf")
+        bestAction = None
+        for action in actions:
+          currentValue = self.getQValue(state,action)
+          if currentValue > qvalue:
+            qvalue = currentValue
+            bestAction = action
+        #devolvemos la accion de encontrar el valor maximo
+        return bestAction 
         util.raiseNotDefined()
 
     def getAction(self, state):
@@ -88,9 +119,20 @@ class QLearningAgent(ReinforcementAgent):
         legalActions = self.getLegalActions(state)
         action = None
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
-
+        #Si no hay acciones devuelvo la action a None
+        if not legalActions:
+          return action
+        #Actualizo la action en funcion de plipcoint y randomchoice
+        prob = self.epsilon
+        if util.flipCoin(prob):
+          action = random.choice(legalActions)
+        #la mejor accion que deberia tomar
+        else:
+          action = self.computeActionFromQValues(state)
+        #devolvemos la accion
         return action
+        util.raiseNotDefined()
+        
 
     def update(self, state, action, nextState, reward):
         """
@@ -102,7 +144,13 @@ class QLearningAgent(ReinforcementAgent):
           it will be called on your behalf
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        #usando la formula dada en clase necesitamos los siguientes valores
+        alpha = self.alpha
+        discount = self.discount
+        qvalue = self.getQValue(state,action)
+        nextValue = self.computeValueFromQValues(nextState)
+        #actualizamos lo valores del QVALUES
+        self.Qvalues[state,action] = (1-alpha)*qvalue + alpha*(reward+discount*nextValue)
 
     def getPolicy(self, state):
         return self.computeActionFromQValues(state)
