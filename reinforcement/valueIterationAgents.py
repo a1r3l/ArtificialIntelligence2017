@@ -45,17 +45,23 @@ class ValueIterationAgent(ValueEstimationAgent):
 
         # Write value iteration code here
         "*** YOUR CODE HERE ***"
+        #por cada iteracion
         for it in range(iterations):
+          #copiamos los valores para no modificar lis antiguos
           values_final = self.values.copy()
+          #recorremos cada estado
           for state in mdp.getStates():
             final = - float('inf')
+            #por cada posible accion
             for action in mdp.getPossibleActions(state):
+              #computamos el qvalue
               q_value = self.computeQValueFromValues(state,action)
               if q_value > final:
                 final = q_value
             if final == - float('inf'):
               final = 0
             values_final[state] = final
+          #actualizamos values
           self.values = values_final
 
     def getValue(self, state):
@@ -71,7 +77,9 @@ class ValueIterationAgent(ValueEstimationAgent):
           value function stored in self.values.
         """
         "*** YOUR CODE HERE ***"
+        #inicializamos el valor a cero
         q_value = 0
+        #computamos el qvalue en funcion de los estados y las probabilidades
         for trans in self.mdp.getTransitionStatesAndProbs(state, action):
           q_value += trans[1] * (self.mdp.getReward(state,action,trans[0]) + (self.getValue(trans[0]) * self.discount))
         return q_value
@@ -87,13 +95,19 @@ class ValueIterationAgent(ValueEstimationAgent):
           terminal state, you should return None.
         """
         "*** YOUR CODE HERE ***"
+        #verificamos si estamos en un estado final
         if self.mdp.isTerminal(state): 
+          #si es asi no devolvemos ninguna accion
           return None
+        #iniciamos una tupla valor accion donde guardaremos al mejor accion  
         bestAction = [- float('inf'), None]
+        #recorremos las acciones
         for action in self.mdp.getPossibleActions(state):
           q_value = self.getQValue(state,action)
+          #si el valor es mayor al que ya teniamos actualizamos el valor y la accion
           if q_value > bestAction[0]:
             bestAction[0], bestAction[1] = q_value, action
+        #devolvemos al mejor accion
         return bestAction[1] 
         util.raiseNotDefined()
 
