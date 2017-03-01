@@ -68,7 +68,7 @@ class QLearningAgent(ReinforcementAgent):
         #recogemos las acciones
         actions = self.getLegalActions(state)
         #si no hay acciones devolvemos 0
-        if not actions:
+        if len(actions)==0 :
           return 0.0
         #por cada accion computamos el valor y devolveremos el maximo
         qvalue = -float("inf")
@@ -90,7 +90,7 @@ class QLearningAgent(ReinforcementAgent):
         #recogemos las acciones
         actions = self.getLegalActions(state) 
         #si no hay acciones devolvemos 0
-        if not actions:
+        if len(actions) == 0:
           return None 
         #computamos el valor maximo y vamos actualizando la accion
         qvalue = -float("inf")
@@ -120,7 +120,7 @@ class QLearningAgent(ReinforcementAgent):
         action = None
         "*** YOUR CODE HERE ***"
         #Si no hay acciones devuelvo la action a None
-        if not legalActions:
+        if len(legalActions) == 0:
           return action
         #Actualizo la action en funcion de plipcoint y randomchoice
         prob = self.epsilon
